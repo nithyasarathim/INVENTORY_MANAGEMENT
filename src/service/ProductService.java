@@ -38,6 +38,5 @@ public class ProductService {
 
 	public int addProduct(Product product) throws SQLException {
 		return productDAO.addProduct(product);
-		
 	}
 }

@@ -8,7 +8,6 @@ public class Product {
 	    private String productType;
 	    
 		public Product(String productName, double productPrice, String productType) {
-			super();
 			this.productName = productName;
 			this.productPrice = productPrice;
 			this.productType = productType;

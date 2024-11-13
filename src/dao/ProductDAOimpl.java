@@ -84,11 +84,9 @@ public class ProductDAOimpl implements ProductDAO {
              PreparedStatement psPerishable = con.prepareStatement(sqlDeletePerishable);
              PreparedStatement psProduct = con.prepareStatement(sqlDeleteProduct)) {
 
-            // Delete from perishable_product table
             psPerishable.setInt(1, id);
             int resultPerishable = psPerishable.executeUpdate();
             
-            // Check if perishable product was removed, then delete from product table
             if (resultPerishable > 0) {
                 psProduct.setInt(1, id);
                 psProduct.executeUpdate();
@@ -108,11 +106,9 @@ public class ProductDAOimpl implements ProductDAO {
              PreparedStatement psNonPerishable = con.prepareStatement(sqlDeleteNonPerishable);
              PreparedStatement psProduct = con.prepareStatement(sqlDeleteProduct)) {
 
-            // Delete from nonperishable_product table
             psNonPerishable.setInt(1, id);
             int resultNonPerishable = psNonPerishable.executeUpdate();
 
-            // Check if non-perishable product was removed, then delete from product table
             if (resultNonPerishable > 0) {
                 psProduct.setInt(1, id);
                 psProduct.executeUpdate();
