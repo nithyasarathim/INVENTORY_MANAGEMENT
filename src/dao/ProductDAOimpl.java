@@ -75,15 +75,24 @@ public class ProductDAOimpl implements ProductDAO {
         }
     }
 
-    @Override
+    @Override 
     public void removePershableProduct(int id) throws SQLException {
-        String sql = "DELETE FROM perishable_product WHERE perishable_id = ?";
-        
-        try (Connection con = DBconnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            int result = ps.executeUpdate();
-            if (result > 0) {
-                System.out.println("Perishable product removed successfully.");
+        String sqlDeletePerishable = "DELETE FROM perishable_product WHERE product_id = ?";
+        String sqlDeleteProduct = "DELETE FROM product WHERE product_id = ?";
+
+        try (Connection con = DBconnection.getConnection(); 
+             PreparedStatement psPerishable = con.prepareStatement(sqlDeletePerishable);
+             PreparedStatement psProduct = con.prepareStatement(sqlDeleteProduct)) {
+
+            // Delete from perishable_product table
+            psPerishable.setInt(1, id);
+            int resultPerishable = psPerishable.executeUpdate();
+            
+            // Check if perishable product was removed, then delete from product table
+            if (resultPerishable > 0) {
+                psProduct.setInt(1, id);
+                psProduct.executeUpdate();
+                System.out.println("Perishable product and corresponding product entry removed successfully.");
             } else {
                 System.out.println("No perishable product found with the given ID.");
             }
@@ -92,16 +101,26 @@ public class ProductDAOimpl implements ProductDAO {
 
     @Override
     public void removeNonPershableProduct(int id) throws SQLException {
-        String sql = "DELETE FROM nonperishable_product WHERE nonperishable_id = ?";
-        
-        try (Connection con = DBconnection.getConnection(); PreparedStatement ps = con.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            int result = ps.executeUpdate();
-            if (result > 0) {
-                System.out.println("Non-perishable product removed successfully.");
+        String sqlDeleteNonPerishable = "DELETE FROM nonperishable_product WHERE product_id = ?";
+        String sqlDeleteProduct = "DELETE FROM product WHERE product_id = ?";
+
+        try (Connection con = DBconnection.getConnection(); 
+             PreparedStatement psNonPerishable = con.prepareStatement(sqlDeleteNonPerishable);
+             PreparedStatement psProduct = con.prepareStatement(sqlDeleteProduct)) {
+
+            // Delete from nonperishable_product table
+            psNonPerishable.setInt(1, id);
+            int resultNonPerishable = psNonPerishable.executeUpdate();
+
+            // Check if non-perishable product was removed, then delete from product table
+            if (resultNonPerishable > 0) {
+                psProduct.setInt(1, id);
+                psProduct.executeUpdate();
+                System.out.println("Non-perishable product and corresponding product entry removed successfully.");
             } else {
                 System.out.println("No non-perishable product found with the given ID.");
             }
         }
     }
+
 }

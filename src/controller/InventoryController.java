@@ -3,7 +3,6 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.sql.Date;
 import java.sql.SQLException;
 
 import model.NonPerishableProduct;
@@ -173,7 +172,7 @@ public class InventoryController {
 		inventoryService.removeInventory(id);
 	}
 	
-	private void addStock() throws NumberFormatException, IOException{
+	private void addStock() throws NumberFormatException, IOException, SQLException{
 		System.out.println("\n------------------------------------");
 		System.out.println("ADD STOCK TO AN INVENTORY");
 		System.out.println("------------------------------------");
@@ -187,7 +186,7 @@ public class InventoryController {
 		System.out.println("Enter the threshold :");
 		int threshold=Integer.parseInt(br.readLine());
 		stockDataService.addStock(new StockData(productID, inventoryID, stockCount, threshold));
-		
+			
 		
 	}
 	
@@ -202,20 +201,28 @@ public class InventoryController {
 	}
 	
 	private void updateStock() throws NumberFormatException, IOException {
-		System.out.println("\n------------------------------------");
-		System.out.println("UPDATE STOCK IN AN INVENTORY");
-		System.out.println("1. Add stocks ");
-		System.out.println("2. Remove stocks ");
-		System.out.println("------------------------------------");
-		
-		System.out.println("Enter the stock id :");
-		int stockID = Integer.parseInt(br.readLine());
-		System.out.println("Enter the no. of stocks :");
-		int stockCount = Integer.parseInt(br.readLine());
-		stockDataService.updateStock(stockID,stockCount);
-		
-		
-		
+	    System.out.println("\n------------------------------------");
+	    System.out.println("UPDATE STOCK IN AN INVENTORY (A/R):");
+	    System.out.println("------------------------------------");
+
+	    System.out.println("Choose an option:");
+	    System.out.println("A - Add stock");
+	    System.out.println("R - Remove stock");
+	    char option = br.readLine().trim().toUpperCase().charAt(0);
+
+	    if (option != 'A' && option != 'R') {
+	        System.out.println("Invalid option selected. Please enter 'A' to add or 'R' to remove stock.");
+	        return;
+	    }
+
+	    System.out.println("Enter the product ID:");
+	    int stockId = Integer.parseInt(br.readLine());
+
+	    System.out.println("Enter the quantity:");
+	    int stockQuantity = Integer.parseInt(br.readLine());
+
+	    stockDataService.updateStock(stockId, stockQuantity, option);
+		System.out.println("Stock updated successfully.");
 	}
 
 	
