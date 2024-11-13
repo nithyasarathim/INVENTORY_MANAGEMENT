@@ -2,6 +2,7 @@ package model;
 
 public class Product {
 
+		private int productId;
 	    private String productName;   
 	    private double productPrice; 
 	    private String productType;
@@ -30,5 +31,10 @@ public class Product {
 		}
 		public void setProductType(String productType) {
 			this.productType = productType;
+		}
+
+		public void setProductId(int productId) {
+			// TODO Auto-generated method stub
+			
 		}
 }

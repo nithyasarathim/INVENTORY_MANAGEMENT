@@ -4,19 +4,30 @@ import java.util.Date;
 
 public class PerishableProduct extends Product {
 
-	private Date expirationDate;
-
-	public PerishableProduct(String productName, double productPrice, String productType, Date expirationDate) {
+	private int bestbefore;
+	private int productID;
+	
+	public PerishableProduct(int productID,String productName, double productPrice, String productType, int bestbefore) {
 		super(productName, productPrice, productType);
-		this.setExpirationDate(expirationDate);
+		
+		this.productID=productID;
+		this.setBestbefore(bestbefore);
 	}
 
-	public Date getExpirationDate() {
-		return expirationDate;
+	
+	public int getProductId() {
+		return productID;
 	}
 
-	public void setExpirationDate(Date expirationDate) {
-		this.expirationDate = expirationDate;
+
+	public int getbestbefore() {
+		return bestbefore;
 	}
+
+
+	public void setBestbefore(int bestbefore) {
+		this.bestbefore = bestbefore;
+	}
+
 	
 }

@@ -1,5 +1,7 @@
 package service;
 
+import java.sql.SQLException;
+
 import dao.ProductDAO;
 import dao.ProductDAOimpl;
 import model.NonPerishableProduct;
@@ -14,23 +16,28 @@ public class ProductService {
 		this.productDAO =new ProductDAOimpl();
 	}
 
-	public void addPerishableProduct(PerishableProduct perishableProduct) {
+	public void addPerishableProduct(PerishableProduct perishableProduct) throws SQLException {
 		productDAO.addPerishableProduct(perishableProduct);
 		
 	}
 
-	public void addNonPerishableProduct(NonPerishableProduct nonPerishableProduct) {
+	public void addNonPerishableProduct(NonPerishableProduct nonPerishableProduct) throws SQLException {
 		productDAO.addNonPerishableProduct(nonPerishableProduct);
 		
 	}
 
-	public void removePershableProduct(int id) {
+	public void removePershableProduct(int id) throws SQLException {
 		productDAO.removePershableProduct(id);
 		
 	}
 
-	public void removeNonPershableProduct(int id) {
+	public void removeNonPershableProduct(int id) throws SQLException {
 		productDAO.removeNonPershableProduct(id);
+		
+	}
+
+	public int addProduct(Product product) throws SQLException {
+		return productDAO.addProduct(product);
 		
 	}
 }

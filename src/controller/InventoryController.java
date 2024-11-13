@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Date;
+import java.sql.SQLException;
 
 import model.NonPerishableProduct;
 import model.PerishableProduct;
@@ -34,7 +35,7 @@ public class InventoryController {
 		this.br = new BufferedReader(new InputStreamReader(System.in));
 	}
 	
-	public void start() throws NumberFormatException, IOException {
+	public void start() throws NumberFormatException, IOException, SQLException {
 		boolean running=true;
 		while(running)
 		{
@@ -85,11 +86,20 @@ public class InventoryController {
 			case 10:
 				viewAlerts();
 				break;
+			
+			case 11:
+				viewTransactions();
+				break;
+				
+			default:
+				System.out.println("Invalid choice");
 			}
+			
 		}
 	}
 
-	private void addProduct() throws NumberFormatException, IOException {
+
+	private void addProduct() throws NumberFormatException, IOException, SQLException {
 		System.out.println("\n------------------------------------");
 		System.out.println("CREATE PRODUCT");
 		System.out.println("------------------------------------");
@@ -104,15 +114,18 @@ public class InventoryController {
 		String productType = br.readLine();
 		
 		if("P".equalsIgnoreCase(productType)) {
-			System.out.println("Enter the expiration date :");
-			Date date =Date.valueOf(br.readLine());
-			productService.addPerishableProduct(new PerishableProduct(name, price, productType, date));
+			System.out.println("Enter the bestbefore (in months) :");
+			int bestbefore=Integer.parseInt(br.readLine());
+			
+			int id= productService.addProduct(new Product(name,price,productType));
+			productService.addPerishableProduct(new PerishableProduct(id ,name, price, productType, bestbefore));
 			System.out.println("Adding a new Product - Success !");
 		} 
 		else if("NP".equalsIgnoreCase(productType)) {
-			System.out.println("Enter the warranty period (yyyy-MM-dd) :");
+			System.out.println("Enter the shelflife (in years):");
 			int  warranty=Integer.parseInt(br.readLine());
-			productService.addNonPerishableProduct(new NonPerishableProduct(name,price,productType, warranty));
+			int id= productService.addProduct(new Product(name,price,productType));
+			productService.addNonPerishableProduct(new NonPerishableProduct(id ,name, price, productType, warranty));
 			System.out.println("Adding a new Product - Success !");
 		}
 		else {
@@ -121,7 +134,7 @@ public class InventoryController {
 		
 	}
 	
-	 private void removeProduct() throws NumberFormatException, IOException {
+	 private void removeProduct() throws NumberFormatException, IOException, SQLException {
 		 System.out.println("\n------------------------------------");
 		 System.out.println("REMOVE PRODUCT");
 		 System.out.println("------------------------------------");
@@ -140,7 +153,7 @@ public class InventoryController {
 		 
 	}
 	 
-	private void addInventory() throws IOException{
+	private void addInventory() throws IOException, SQLException{
 		System.out.println("\n------------------------------------");
 		System.out.println("CREATE A NEW INVENTORY");
 		System.out.println("------------------------------------");
@@ -150,7 +163,7 @@ public class InventoryController {
 		inventoryService.addInventory(name);
 	}
 	
-	private void removeInventory() throws NumberFormatException, IOException{
+	private void removeInventory() throws NumberFormatException, IOException, SQLException{
 		System.out.println("\n------------------------------------");
 		System.out.println("REMOVE AN INVENTORY");
 		System.out.println("------------------------------------");
@@ -178,27 +191,73 @@ public class InventoryController {
 		
 	}
 	
-	private void removeStock(){
+	private void removeStock() throws NumberFormatException, IOException{
+		System.out.println("\n------------------------------------");
+		System.out.println("REMOVE STOCK TO AN INVENTORY");
+		System.out.println("------------------------------------");
+		
+		System.out.println("Enter the stock's id to remove :");
+		int stockId = Integer.parseInt(br.readLine());
+		stockDataService.removeStock(stockId);
+	}
+	
+	private void updateStock() throws NumberFormatException, IOException {
+		System.out.println("\n------------------------------------");
+		System.out.println("UPDATE STOCK IN AN INVENTORY");
+		System.out.println("1. Add stocks ");
+		System.out.println("2. Remove stocks ");
+		System.out.println("------------------------------------");
+		
+		System.out.println("Enter the stock id :");
+		int stockID = Integer.parseInt(br.readLine());
+		System.out.println("Enter the no. of stocks :");
+		int stockCount = Integer.parseInt(br.readLine());
+		stockDataService.updateStock(stockID,stockCount);
+		
+		
+		
+	}
+
+	
+	private void viewInventory() throws NumberFormatException, IOException, SQLException{
+		System.out.println("\n------------------------------------");
+		System.out.println("VIEW AN INVENTORY");
+		System.out.println("------------------------------------");
+		
+		System.out.println("Enter the inventory id :");
+		int inventoryID = Integer.parseInt(br.readLine());
+		inventoryService.viewInventory(inventoryID);
 		
 	}
 	
-	private void viewInventory(){
+	private void viewStock() throws NumberFormatException, IOException{
+		System.out.println("\n------------------------------------");
+		System.out.println("VIEW A STOCK STATUS");
+		System.out.println("------------------------------------");
 		
-	}
-	
-	private void viewStock(){
+		System.out.println("Enter the stock id :");
+		int stockID = Integer.parseInt(br.readLine());
 		
+		stockDataService.viewStock(stockID);
 	}
 	
 	private void viewAlerts(){
+		System.out.println("\n------------------------------------");
+		System.out.println("VIEW STOCK ALERTS");
+		System.out.println("------------------------------------");
 		
+		stockAlertService.viewAlerts();
+	}
+	
+	private void viewTransactions() {
+		System.out.println("\n------------------------------------");
+		System.out.println("VIEW TRANSACTIONS");
+		System.out.println("------------------------------------");
+		
+		transactionLogService.viewTransactions();
 	}
 
-	private void updateStock() {
-		
-		
-	}
-
+	
 	
 	public void displayMenu() {
         System.out.println("\n--------------------------------------------");
@@ -214,6 +273,7 @@ public class InventoryController {
         System.out.println("| 8. VIEW INVENTORY                        |");
         System.out.println("| 9. VIEW STOCK AVAILABILITY               |");
         System.out.println("|10. VIEW STOCK ALERTS                     |");
+        System.out.println("|11. VIEW TRANSACTIONS                     |");		
         System.out.println("| 0. EXIT                                  |");
         System.out.println("--------------------------------------------");
         System.out.println("|             ENTER A CHOICE               |");

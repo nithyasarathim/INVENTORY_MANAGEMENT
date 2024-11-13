@@ -8,4 +8,8 @@ public interface StockDataDAO {
 
 	void removeStock(int id);
 
+	void updateStock(int stockID, int stockCount);
+
+	void viewStock(int stockID);
+
 }

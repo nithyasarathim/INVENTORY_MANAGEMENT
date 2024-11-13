@@ -20,4 +20,12 @@ public class StockDataService {
 		stockDataDAO.removeStock(id);
 	}
 
+	public void updateStock(int stockID, int stockCount) {
+		stockDataDAO.updateStock(stockID,stockCount);
+	}
+	
+	public void viewStock(int stockID) {
+		stockDataDAO.viewStock(stockID);
+	}
+
 }
